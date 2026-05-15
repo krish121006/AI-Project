@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthAI | Advanced Disease Predictor</title>
+    <meta name="description" content="State-of-the-art medical AI for symptom analysis and health prediction.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons & Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-square-plus"></i>
+            <span>HealthAI</span>
+        </div>
+        <div class="user-profile">
+            <!-- Notifications Dropdown -->
+            <div class="dropdown-container">
+                <div class="icon-btn" id="notif-trigger-main" style="cursor: pointer; width: 40px; height: 40px; background: #f4f5f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div id="notif-dropdown-main" class="dropdown-menu">
+                    <div class="dropdown-header">
+                        <h3>Notifications</h3>
+                        <span class="nav-link-badge">3 New</span>
+                    </div>
+                    <div class="dropdown-content">
+                        <div class="notification-item" data-notif-title="Report Ready" data-notif-body="Your symptom analysis for 'Headache' is complete. All metrics are within normal ranges, but we suggest rest and hydration. You can download the full report from your history." data-notif-icon="fa-file-medical" data-notif-color="notif-blue">
+                            <div class="notif-icon notif-blue"><i class="fa-solid fa-file-medical"></i></div>
+                            <div class="notif-text">
+                                <h4>Report Ready</h4>
+                                <p>Your symptom analysis for "Headache" is complete.</p>
+                                <div class="notif-time">2 mins ago</div>
+                            </div>
+                        </div>
+                        <div class="notification-item" data-notif-title="Health Tip" data-notif-body="Drinking warm water with lemon and honey can help soothe a sore throat and boost your immune system. Stay warm and avoid cold drinks for the next 24 hours." data-notif-icon="fa-heart-pulse" data-notif-color="notif-green">
+                            <div class="notif-icon notif-green"><i class="fa-solid fa-heart-pulse"></i></div>
+                            <div class="notif-text">
+                                <h4>Health Tip</h4>
+                                <p>Drinking warm water can help soothe a sore throat.</p>
+                                <div class="notif-time">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="notification-item" data-notif-title="System Update" data-notif-body="We've upgraded our AI core to version 3.2. This update improves the accuracy of respiratory condition predictions by 15% and adds support for more symptoms." data-notif-icon="fa-shield-virus" data-notif-color="notif-orange">
+                            <div class="notif-icon notif-orange"><i class="fa-solid fa-shield-virus"></i></div>
+                            <div class="notif-text">
+                                <h4>System Update</h4>
+                                <p>AI Model upgraded to v3.2 for better accuracy.</p>
+                                <div class="notif-time">Yesterday</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div class="dropdown-container">
+                <img src="profile_avatar_1772082045868.png" alt="Profile" class="profile-img" id="profile-trigger-main" style="cursor: pointer;">
+                <div id="profile-dropdown-main" class="dropdown-menu">
+                    <div class="profile-info-box">
+                        <img src="profile_avatar_1772082045868.png" alt="Profile" class="profile-large-img">
+                        <h4>Krish</h4>
+                        <p>Premium Member • ID: #8829</p>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span>Analyses</span>
+                            <strong>12</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Score</span>
+                            <strong>98</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Status</span>
+                            <strong>Healthy</strong>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="profile-btn" id="open-settings-main"><i class="fa-solid fa-user-gear"></i> Account Settings</button>
+                        <button class="profile-btn" id="open-history-main"><i class="fa-solid fa-clock-rotate-left"></i> Analysis History</button>
+                        <button class="profile-btn logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="background-element"></div>
+
+    <!-- Main Container -->
+    <main id="main-app" class="app-container">
+        <section class="hero-section">
+            <h1>AI Health Predictor</h1>
+            <p>Understand your symptoms with our advanced medical AI analysis.</p>
+        </section>
+
+        <div class="diagnostic-card">
+            <div class="card-header">
+                <h2>How are you feeling?</h2>
+            </div>
+
+            <div class="search-box-wrapper">
+                <div class="search-input-group">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="symptom-search" placeholder="e.g. Headache, Sore throat, Fatigue..."
+                        autocomplete="off">
+                    <button id="add-symptom-btn" class="add-btn"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            </div>
+
+            <div class="symptoms-section">
+                <h3>SYMPTOMS ADDED</h3>
+                <div id="selected-tags" class="tags-container">
+                    <!-- Tokens will be injected here -->
+                    <div class="placeholder-text">No symptoms added yet.</div>
+                </div>
+            </div>
+
+            <div class="browse-section">
+                <h3>BROWSE COMMON SYMPTOMS</h3>
+                <div id="symptoms-grid" class="symptoms-grid-quick">
+                    <!-- Symptoms will be injected here -->
+                </div>
+            </div>
+
+            <div class="action-footer">
+                <button id="predict-btn" class="analyze-btn" disabled>
+                    <i class="fa-solid fa-chart-line"></i>
+                    Analyze My Health
+                </button>
+                <div class="compliance-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Privacy protected and HIPAA compliant
+                </div>
+            </div>
+        </div>
+
+        <footer class="app-footer">
+            <div class="divider"></div>
+            <p class="disclaimer-text">
+                <strong>Medical Disclaimer:</strong> AI health analysis is for informational purposes only and does not
+                constitute medical advice, diagnosis, or treatment. Always seek the advice of your physician.
+            </p>
+        </footer>
+    </main>
+
+    <!-- Premium AI Analysis Loading Screen -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <header class="loading-header">
+            <div class="header-left">
+                <div class="health-logo-icon">
+                    <span></span><span></span><span></span>
+                </div>
+                <span class="logo-text">HealthAI</span>
+            </div>
+            <div class="header-right">
+                <div class="dropdown-container">
+                    <div class="icon-btn" id="notif-trigger-loading" style="cursor: pointer;"><i class="fa-solid fa-bell"></i></div>
+                    <div id="notif-dropdown-loading" class="dropdown-menu">
+                        <div class="dropdown-header">
+                            <h3>Notifications</h3>
+                            <span class="nav-link-badge">3 New</span>
+                        </div>
+                        <div class="dropdown-content">
+                            <div class="notification-item">
+                                <div class="notif-icon notif-blue"><i class="fa-solid fa-file-medical"></i></div>
+                                <div class="notif-text">
+                                    <h4>Report Ready</h4>
+                                    <p>Analysis complete.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-avatar-ring">
+                    <img src="profile_avatar_1772082045868.png" alt="User">
+                </div>
+            </div>
+        </header>
+
+        <div class="loading-body">
+            <!-- Animated Circle -->
+            <div class="main-loader-visual">
+                <div class="ring-outer"></div>
+                <div class="ring-progress"></div>
+                <div class="heart-center">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+            </div>
+
+            <!-- Text Content -->
+            <div class="loading-text-section">
+                <h1>Analyzing Your Symptoms...</h1>
+                <p>Our AI is cross-referencing thousands of medical data points to provide you with the most accurate
+                    analysis.</p>
+            </div>
+
+            <!-- Progress Box -->
+            <div class="progress-box-card">
+                <div class="progress-labels">
+                    <span class="label-left">Processing medical data</span>
+                    <span class="label-right" id="loading-percentage">65%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="loading-progress-bar" class="progress-bar-fill" style="width: 65%;"></div>
+                </div>
+                <div class="security-tag">
+                    <i class="fa-solid fa-shield-check"></i>
+                    <span>SECURE HIPAA COMPLIANT ANALYSIS</span>
+                </div>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="status-cards-row">
+                <div class="status-tile complete" id="stage-1">
+                    <i class="fa-solid fa-database"></i>
+                    <span class="tile-title">Scanning Database</span>
+                    <span class="tile-status">COMPLETE</span>
+                </div>
+                <div class="status-tile in-progress" id="stage-2">
+                    <i class="fa-solid fa-brain"></i>
+                    <span class="tile-title">Neural Comparison</span>
+                    <span class="tile-status">IN PROGRESS</span>
+                </div>
+                <div class="status-tile pending" id="stage-3">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <span class="tile-title">Final Validation</span>
+                    <span class="tile-status">PENDING</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="loading-footer-bar">
+            <div class="status-indicator">
+                <span class="dot-green"></span>
+                <span>AI Engine Online</span>
+            </div>
+            <span class="footer-sep">|</span>
+            <span>Lat: 22ms</span>
+            <span class="footer-sep">|</span>
+            <span>1.2M Records Checked</span>
+        </footer>
+    </div>
+
+    <!-- Professional Result Page (Replaces Modal) -->
+    <div id="result-page" class="result-container hidden">
+        <!-- Result Header Bar -->
+        <header class="result-header-bar">
+            <div class="result-logo">
+                <i class="fa-solid fa-notes-medical"></i>
+                <span>Simplified Health Result</span>
+            </div>
+            <div class="result-actions-top">
+                <!-- Notifications Dropdown (Result Page) -->
+                <div class="dropdown-container">
+                    <div class="header-icon-circle" id="notif-trigger-result" style="cursor: pointer;">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div id="notif-dropdown-result" class="dropdown-menu">
+                        <div class="dropdown-header">
+                            <h3>Notifications</h3>
+                            <span class="nav-link-badge">3 New</span>
+                        </div>
+                        <div class="dropdown-content">
+                            <!-- Same content as above, will be kept in sync by JS if needed or just repeated for simplicity -->
+                            <div class="notification-item">
+                                <div class="notif-icon notif-blue"><i class="fa-solid fa-file-medical"></i></div>
+                                <div class="notif-text">
+                                    <h4>Report Ready</h4>
+                                    <p>Your symptom analysis for "Headache" is complete.</p>
+                                    <div class="notif-time">2 mins ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Dropdown (Result Page) -->
+                <div class="dropdown-container">
+                    <div class="header-icon-circle" id="profile-trigger-result" style="cursor: pointer;">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div id="profile-dropdown-result" class="dropdown-menu">
+                        <div class="profile-info-box">
+                            <img src="profile_avatar_1772082045868.png" alt="Profile" class="profile-large-img">
+                            <h4>Krish</h4>
+                            <p>Premium Member • ID: #8829</p>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="profile-btn" id="open-settings-result"><i class="fa-solid fa-user-gear"></i> Account Settings</button>
+                            <button class="profile-btn" id="open-history-result"><i class="fa-solid fa-clock-rotate-left"></i> Analysis History</button>
+                            <button class="profile-btn logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="result-content-wrapper">
+            <!-- Result Summary -->
+            <div class="result-summary-section">
+                <div id="risk-badge-full" class="status-badge">LOW RISK LEVEL</div>
+                <h1 id="result-title-main">Your Health Risk is Low</h1>
+                <p id="result-subtitle">Based on your reported metrics and AI analysis, your current health status
+                    appears stable.</p>
+            </div>
+
+
+
+            <!-- Home Care Section -->
+            <div class="section-title">Recommended Home Care</div>
+            <div id="remedies-grid" class="info-grid">
+                <!-- Static placeholders that will be replaced by dynamic remedies if available -->
+                <div class="info-card">
+                    <div class="info-icon blue-bg"><i class="fa-solid fa-droplet"></i></div>
+                    <h4>Stay Hydrated</h4>
+                    <p>Drink at least 8-10 glasses of water to maintain metabolic balance.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon purple-bg"><i class="fa-solid fa-moon"></i></div>
+                    <h4>Optimal Rest</h4>
+                    <p>Ensure 7-9 hours of uninterrupted sleep for immune recovery.</p>
+                </div>
+            </div>
+            <div class="info-card full-width">
+                <div class="info-icon orange-bg"><i class="fa-solid fa-thermometer"></i></div>
+                <div class="text-group">
+                    <h4>Monitor Vitals</h4>
+                    <p>Check your temperature and heart rate twice daily.</p>
+                </div>
+            </div>
+
+            <!-- Nearby Facilities -->
+            <div class="section-header">
+                <h3>Nearby Facilities</h3>
+                <a href="#" class="see-all">See all</a>
+            </div>
+            <div class="facilities-list">
+                <div class="facility-item">
+                    <div class="facility-icon"><i class="fa-solid fa-square-plus"></i></div>
+                    <div class="facility-info">
+                        <h4>City General Hospital</h4>
+                        <p><i class="fa-solid fa-location-dot"></i> 1.2 miles • <span>Open 24/7</span></p>
+                    </div>
+                    <button class="maps-btn"><i class="fa-solid fa-map-location-dot"></i> Open Maps</button>
+                </div>
+                <div class="facility-item">
+                    <div class="facility-icon"><i class="fa-solid fa-briefcase-medical"></i></div>
+                    <div class="facility-info">
+                        <h4>St. Mary Medical Center</h4>
+                        <p><i class="fa-solid fa-location-dot"></i> 2.8 miles • <span>Open 24/7</span></p>
+                    </div>
+                    <button class="maps-btn"><i class="fa-solid fa-map-location-dot"></i> Open Maps</button>
+                </div>
+            </div>
+
+            <!-- Disclaimer Box -->
+            <div class="disclaimer-box">
+                <p>Disclaimer: This AI-generated assessment is for informational purposes only and does not substitute
+                    professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or
+                    other qualified health provider with any questions you may have regarding a medical condition.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="result-footer-actions">
+                <button id="restart-btn-full" class="main-restart-btn">
+                    <i class="fa-solid fa-rotate-right"></i> Start New Analysis
+                </button>
+                <div class="dual-btns">
+                    <button id="download-btn-full" class="download-btn"><i class="fa-solid fa-download"></i> Download
+                        Full Report</button>
+                    <button class="share-btn"><i class="fa-solid fa-share-nodes"></i> Share with Doctor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis History Modal -->
+    <div id="history-modal" class="modal-backdrop hidden">
+        <div class="modal-content history-modal-wide">
+            <button id="close-history-modal" class="btn-close">&times;</button>
+            <div class="modal-header-custom">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <h2>Analysis History</h2>
+                <p>View your past health assessments</p>
+            </div>
+            <div id="history-list" class="history-list-container">
+                <!-- History items will be injected here -->
+                <div class="empty-history">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <p>No past reports found.</p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="secondary-action" id="clear-history">
+                    <i class="fa-solid fa-trash-can"></i> Clear All History
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live AI Assistant Widget -->
+    <div id="ai-chat-widget" class="chat-widget">
+        <div id="chat-window" class="chat-window hidden">
+            <div class="chat-header">
+                <div class="ai-status">
+                    <div class="status-dot online"></div>
+                    <div>
+                        <h4>HealthAI Assistant</h4>
+                        <span>Always Online</span>
+                    </div>
+                </div>
+                <button id="close-chat" class="close-chat-btn">&times;</button>
+            </div>
+            <div id="chat-messages" class="chat-messages">
+                <div class="message ai-msg">
+                    <div class="msg-bubble">
+                        Hello! I'm your HealthAI Assistant.<br><br>
+                        नमस्ते! मैं आपका HealthAI असिस्टेंट हूँ।<br><br>
+                        નમસ્તે! હું તમારો HealthAI આસિસ્ટન્ટ છું.<br><br>
+                        Namaste! Main aapka HealthAI Assistant hu.<br><br>
+                        How can I help you understand your symptoms today?
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                <button id="send-chat-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <div id="chat-bubble" class="chat-bubble">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span class="bubble-notif">1</span>
+        </div>
+    </div>
+
+    <!-- Notification Detail Modal -->
+    <div id="notif-modal" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <button id="close-notif-modal" class="btn-close">&times;</button>
+            <div class="notif-detail-header">
+                <div id="notif-modal-icon" class="notif-icon large-notif-icon"><i class="fa-solid"></i></div>
+                <h2 id="notif-modal-title">Notification</h2>
+            </div>
+            <div class="notif-detail-body">
+                <p id="notif-modal-body">Details will appear here...</p>
+            </div>
+            <div class="modal-actions">
+                <button class="primary-action" id="notif-modal-action">
+                    <i class="fa-solid fa-check"></i> Mark as Read
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Settings Modal -->
+    <div id="settings-modal" class="modal-backdrop hidden">
+        <div class="modal-content settings-modal-wide">
+            <button id="close-settings" class="btn-close">&times;</button>
+            <div class="modal-header-custom">
+                <i class="fa-solid fa-user-gear"></i>
+                <h2>Account Settings</h2>
+                <p>Manage your profile and medical preferences</p>
+            </div>
+            <div class="settings-grid">
+                <div class="settings-section">
+                    <h3>Personal Information</h3>
+                    <div class="input-field">
+                        <label>Full Name</label>
+                        <input type="text" value="Krish" placeholder="Enter your name">
+                    </div>
+                    <div class="input-field">
+                        <label>Email Address</label>
+                        <input type="email" value="krish.ai@example.com" placeholder="Email">
+                    </div>
+                    <div class="input-field">
+                        <label>Phone Number</label>
+                        <input type="text" value="+91 98765-43210" placeholder="Phone">
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Medical Profile</h3>
+                    <div class="input-field">
+                        <label>Blood Group</label>
+                        <select>
+                            <option>A+</option>
+                            <option selected>O+</option>
+                            <option>B+</option>
+                            <option>AB+</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Allergies</label>
+                        <input type="text" value="Dust, Pollen" placeholder="e.g. Peanuts, Penicillin">
+                    </div>
+                    <div class="input-field">
+                        <label>Chronic Conditions</label>
+                        <input type="text" value="None" placeholder="e.g. Asthma, Diabetes">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="primary-action" id="save-settings">
+                    <i class="fa-solid fa-check"></i> Save Changes
+                </button>
+                <button class="secondary-action" id="cancel-settings">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
