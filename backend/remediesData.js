@@ -86,6 +86,62 @@ const remediesData = {
             "Hari sabziyan aur phal khayein."
         ],
         "tips": "Sahi waqt par soyein aur stress se bachein."
+    },
+    "Viral Fever": {
+        "remedies": [
+            "Poora aaraam karein aur thande paani se bachein.",
+            "Garam soup aur halka khana lein.",
+            "Sir par thande paani ki patti rakhein."
+        ],
+        "tips": "Temperature monitor karein, 3 din mein theek na ho to doctor ko dikhayein."
+    },
+    "Common Headache": {
+        "remedies": [
+            "Shant aur andhere kamre mein aaraam karein.",
+            "Sir aur maathe par halke haath se maalish karein.",
+            "Paryapt matra mein paani pijiye (hydration)."
+        ],
+        "tips": "Screens (mobile/TV) se thodi der door rahein."
+    },
+    "Indigestion": {
+        "remedies": [
+            "Khane ke baad ajwain aur kala namak khayein.",
+            "Halka khana khayein aur paani pijiye.",
+            "Adrak (Ginger) ki chai pijiye."
+        ],
+        "tips": "Ek sath bahut zyada khana na khayein."
+    },
+    "Weakness/Fatigue": {
+        "remedies": [
+            "Nariyal paani aur taze phalo ka juice pijiye.",
+            "Dry fruits (badam, kishmish) khayein.",
+            "Poori neend (7-8 ghante) lein."
+        ],
+        "tips": "Apni diet mein protein aur vitamins badhayein."
+    },
+    "Acidity/Gas": {
+        "remedies": [
+            "Thanda doodh (Cold milk) ya nariyal paani pijiye.",
+            "Khane ke baad thodi Saunf (Fennel seeds) chabayein.",
+            "Jeera paani ubaal kar thanda karke piyein."
+        ],
+        "tips": "Bahar ka fried aur spicy khana bilkul na khayein."
+    },
+    "Vertigo": {
+        "remedies": [
+            "Achanak se khade na hon aur sir ko dheere ghumayein.",
+            "Chakkar aane par turant baith ya let jayein.",
+            "Paryapt paani piyein."
+        ],
+        "tips": "Akele bahar na jayein jab tak theek na lagein."
+    },
+    "Mild Allergy": {
+        "remedies": [
+            "Infected area par thande paani se dhoye.",
+            "Dhool aur dhuen se bachein.",
+            "Aloe vera gel ka use karein."
+        ],
+        "tips": "Allergy ka karan pehchane aur us-se door rahein."
     }
 };
 

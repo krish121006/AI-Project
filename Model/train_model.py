@@ -28,9 +28,9 @@ data = {
     ],
     'Disease': [
         'Flu', 'Common Cold', 'Migraine', 'Typhoid', 'Flu', 'Viral Fever', 'Heart Attack', 'Malaria', 'Food Poisoning', 'Allergy',
-        'GERD', 'Gastritis', 'Gastroenteritis', 'Myositis', 'Arthritis', 'Vertigo', 'Malaria', 'Tonsillitis',
+        'GERD', 'Gastritis', 'Gastroenteritis', 'Myositis', 'Arthritis', 'Vertigo', 'Malaria', 'Throat Infection',
         'Allergy', 'Conjunctivitis', 'Sinusitis', 'Anemia', 'Jaundice', 'Dengue', 'Panic Attack',
-        'Food Poisoning', 'Dengue', 'Tonsillitis', 'Anemia', 'Migraine', 'Heart Attack', 'Healthy', 'Healthy'
+        'Food Poisoning', 'Dengue', 'Throat Infection', 'Anemia', 'Migraine', 'Heart Attack', 'Healthy', 'Healthy'
     ]
 }
 
@@ -43,26 +43,41 @@ extra_patterns = [
     ['Headache', 'Nausea', 'Vomiting', 'Migraine'],
     ['Joint pain', 'Stiffness', 'Swelling', 'Arthritis'],
     ['Stomach pain', 'Diarrhea', 'Vomiting', 'Food Poisoning'],
-    ['Sore throat', 'Fever', 'Hoarseness', 'Tonsillitis'],
+    ['Sore throat', 'Fever', 'Hoarseness', 'Throat Infection'],
     ['Fever', 'Chills', 'Sweating', 'Malaria'],
     ['Cough', 'Fever', 'Breathlessness', 'Pneumonia'],
     ['Fever', 'Headache', 'Body ache', 'Flu'],
     ['None', 'None', 'None', 'Healthy'],
     
-    # Real-world single symptom fallbacks
-    ['Chills', 'None', 'None', 'Viral Fever'],
+    # Real-world single symptom fallbacks (Weighted heavily)
+    ['Chills', 'None', 'None', 'Common Cold'],
     ['Fever', 'None', 'None', 'Viral Fever'],
-    ['Headache', 'None', 'None', 'Migraine'],
+    ['Headache', 'None', 'None', 'Common Headache'],
     ['Cough', 'None', 'None', 'Common Cold'],
-    ['Stomach pain', 'None', 'None', 'Gastritis'],
+    ['Stomach pain', 'None', 'None', 'Acidity'],
     ['Vomiting', 'None', 'None', 'Food Poisoning'],
     ['Fatigue', 'None', 'None', 'Weakness/Fatigue'],
-    ['Chest Pain', 'None', 'None', 'Heart Attack'], # Chest pain alone can trigger Heart attack
+    ['Chest Pain', 'None', 'None', 'Acidity/Gas'], 
     ['Dizziness', 'None', 'None', 'Vertigo'],
-    ['Skin rash', 'None', 'None', 'Allergy'],
-    ['Sore throat', 'None', 'None', 'Tonsillitis'],
+    ['Skin rash', 'None', 'None', 'Mild Allergy'],
+    ['Sore throat', 'None', 'None', 'Common Cold'],
     ['Sweating', 'None', 'None', 'Weakness/Fatigue'],
-    ['Runny nose', 'None', 'None', 'Allergy']
+    ['Runny nose', 'None', 'None', 'Common Cold'],
+    
+    # Duplicate to increase weight for single-symptoms
+    ['Chills', 'None', 'None', 'Common Cold'],
+    ['Fever', 'None', 'None', 'Viral Fever'],
+    ['Headache', 'None', 'None', 'Common Headache'],
+    ['Cough', 'None', 'None', 'Common Cold'],
+    ['Stomach pain', 'None', 'None', 'Acidity'],
+    ['Vomiting', 'None', 'None', 'Food Poisoning'],
+    ['Fatigue', 'None', 'None', 'Weakness/Fatigue'],
+    ['Chest Pain', 'None', 'None', 'Acidity/Gas'], 
+    ['Dizziness', 'None', 'None', 'Vertigo'],
+    ['Skin rash', 'None', 'None', 'Mild Allergy'],
+    ['Sore throat', 'None', 'None', 'Common Cold'],
+    ['Sweating', 'None', 'None', 'Weakness/Fatigue'],
+    ['Runny nose', 'None', 'None', 'Common Cold']
 ]
 
 for p in extra_patterns:

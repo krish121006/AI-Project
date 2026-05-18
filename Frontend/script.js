@@ -592,13 +592,17 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.setDrawColor(0, 82, 204);
             doc.line(20, 35, 190, 35);
 
+            // Patient Info
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Patient Name: ${currentUser}`, 20, 45);
+
             // Diagnosis section
             doc.setFontSize(16);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`Primary Diagnosis: ${disease}`, 20, 50);
+            doc.text(`Primary Diagnosis: ${disease}`, 20, 58);
 
             doc.setFontSize(12);
-            doc.text(`Risk Assessment: ${risk_level}`, 20, 60);
+            doc.text(`Risk Assessment: ${risk_level}`, 20, 68);
 
             // Symptoms
             doc.setFontSize(14);
