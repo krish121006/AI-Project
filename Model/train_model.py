@@ -47,7 +47,22 @@ extra_patterns = [
     ['Fever', 'Chills', 'Sweating', 'Malaria'],
     ['Cough', 'Fever', 'Breathlessness', 'Pneumonia'],
     ['Fever', 'Headache', 'Body ache', 'Flu'],
-    ['None', 'None', 'None', 'Healthy']
+    ['None', 'None', 'None', 'Healthy'],
+    
+    # Real-world single symptom fallbacks
+    ['Chills', 'None', 'None', 'Viral Fever'],
+    ['Fever', 'None', 'None', 'Viral Fever'],
+    ['Headache', 'None', 'None', 'Migraine'],
+    ['Cough', 'None', 'None', 'Common Cold'],
+    ['Stomach pain', 'None', 'None', 'Gastritis'],
+    ['Vomiting', 'None', 'None', 'Food Poisoning'],
+    ['Fatigue', 'None', 'None', 'Weakness/Fatigue'],
+    ['Chest Pain', 'None', 'None', 'Heart Attack'], # Chest pain alone can trigger Heart attack
+    ['Dizziness', 'None', 'None', 'Vertigo'],
+    ['Skin rash', 'None', 'None', 'Allergy'],
+    ['Sore throat', 'None', 'None', 'Tonsillitis'],
+    ['Sweating', 'None', 'None', 'Weakness/Fatigue'],
+    ['Runny nose', 'None', 'None', 'Allergy']
 ]
 
 for p in extra_patterns:

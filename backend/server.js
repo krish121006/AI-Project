@@ -59,9 +59,21 @@ app.post('/api/predict', (req, res) => {
             }
 
             const mainPrediction = predictions[0];
-            const disease = mainPrediction.disease;
-            const riskLevel = calculateRisk(disease, symptoms || [s1, s2, s3]);
-            const { remedies, tips } = getRemedies(disease);
+            let disease = mainPrediction.disease;
+            
+            const rawSymptoms = symptoms || [s1, s2, s3];
+            const riskLevel = calculateRisk(disease, rawSymptoms);
+            const { remedies, tips } = getRemedies(disease, rawSymptoms);
+
+            // If it's a fallback prediction (100 confidence) and it doesn't really match
+            if (mainPrediction.confidence === 100) {
+                // If the user entered custom symptoms that triggered our keyword risk analysis
+                if (riskLevel === "Danger" || riskLevel === "Medium") {
+                    disease = "Unidentified Condition (Requires Attention)";
+                } else {
+                    disease = "General Condition (Based on Custom Symptoms)";
+                }
+            }
 
             res.json({
                 disease: disease,

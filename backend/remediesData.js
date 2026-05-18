@@ -89,17 +89,66 @@ const remediesData = {
     }
 };
 
-function getRemedies(disease) {
-    const defaultRemedy = {
-        "remedies": [
+function getRemedies(disease, symptoms = []) {
+    let defaultRemedies = [];
+    let customTips = "Saaf-safai ka dhyan rakhein aur bheed wali jagah se bachein.";
+
+    // Generate dynamic remedies based on custom symptoms
+    let lowerSymptoms = [];
+    if (Array.isArray(symptoms)) {
+        lowerSymptoms = symptoms.map(s => s ? s.toLowerCase() : "");
+    }
+
+    const symptomText = lowerSymptoms.join(" ");
+
+    if (symptomText.includes("fever") || symptomText.includes("bukhar") || symptomText.includes("hot")) {
+        defaultRemedies.push("Thande paani ki patti sir par rakhein aur aaraam karein.");
+    }
+    if (symptomText.includes("pain") || symptomText.includes("ache") || symptomText.includes("dard")) {
+        defaultRemedies.push("Dard wali jagah par garm sikaai (warm compress) karein.");
+    }
+    if (symptomText.includes("stomach") || symptomText.includes("nausea") || symptomText.includes("vomit") || symptomText.includes("pet")) {
+        defaultRemedies.push("Halka khana khayein aur nimbu paani pijiye.");
+    }
+    if (symptomText.includes("cough") || symptomText.includes("throat") || symptomText.includes("khasi")) {
+        defaultRemedies.push("Garam paani mein namak daalkar garare karein aur adrak lein.");
+    }
+    if (symptomText.includes("weak") || symptomText.includes("fatigue") || symptomText.includes("kamzori")) {
+        defaultRemedies.push("Khoob saara paani piyein, juice lein aur poora aaraam karein.");
+    }
+    if (symptomText.includes("skin") || symptomText.includes("rash") || symptomText.includes("itch")) {
+        defaultRemedies.push("Infected jagah ko saaf rakhein aur thande paani se dhoye.");
+    }
+    if (symptomText.includes("breath") || symptomText.includes("chest") || symptomText.includes("saans")) {
+        defaultRemedies.push("Bhaap (Steam) lijiye aur sidhe baithne ki koshish karein. Agar takleef bade to turant doctor ko dikhayein.");
+        customTips = "Saans lene mein takleef ko ignore na karein, emergency help lein.";
+    }
+
+    if (defaultRemedies.length === 0) {
+        defaultRemedies = [
             "Khoob sara paani piyein aur aaraam karein.",
             "Halka aur ghar ka bana khana hi khayein.",
             "Agar takleef zada ho toh turant doctor ko dikhayein."
-        ],
-        "tips": "Saaf-safai ka dhyan rakhein aur bheed wali jagah se bachein."
+        ];
+    } else {
+        // Add a general one to complete the list
+        defaultRemedies.push("Agar symptoms 2-3 din mein theek na ho, toh doctor se salaah lein.");
+        // Limit to 3 remedies
+        defaultRemedies = defaultRemedies.slice(0, 3);
+    }
+
+    const defaultRemedyObj = {
+        "remedies": defaultRemedies,
+        "tips": customTips
     };
 
-    return remediesData[disease] || defaultRemedy;
+    // If it's a perfectly matched known disease, we can return its specific data, 
+    // BUT we also want to blend in the dynamic remedies if it's generic.
+    if (remediesData[disease] && !symptomText.includes("none")) {
+        return remediesData[disease];
+    }
+
+    return defaultRemedyObj;
 }
 
 module.exports = getRemedies;

@@ -1,4 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Authentication Check
+    const currentUser = localStorage.getItem('ai_health_user');
+    if (!currentUser) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Update Profile Names
+    const profileNameMain = document.getElementById('profile-name-main');
+    const profileNameResult = document.getElementById('profile-name-result');
+    const settingsNameInput = document.getElementById('settings-name-input');
+    
+    if (profileNameMain) profileNameMain.textContent = currentUser;
+    if (profileNameResult) profileNameResult.textContent = currentUser;
+    if (settingsNameInput) settingsNameInput.value = currentUser;
+
+    // Logout logic
+    document.querySelectorAll('.logout-btn').forEach(btn => {
+        btn.onclick = () => {
+            localStorage.removeItem('ai_health_user');
+            window.location.href = 'login.html';
+        };
+    });
+
     // Main App Elements
     const mainApp = document.getElementById('main-app');
     const symptomSearch = document.getElementById('symptom-search');
@@ -410,6 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 100);
 
             try {
+                const startTime = Date.now();
                 const response = await fetch('http://localhost:5000/api/predict', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -417,8 +442,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 const data = await response.json();
+                const elapsedTime = Date.now() - startTime;
 
                 if (response.ok) {
+                    // Animation takes roughly 2000ms to complete. If fetch took less, wait for the remainder.
+                    const remainingWait = Math.max(0, 2000 - elapsedTime);
+                    
                     setTimeout(() => {
                         showResult(data);
 
@@ -432,9 +461,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         progressBar.style.width = '0%';
                         progressText.textContent = '0%';
                         stages[0].className = 'stage-card complete';
-                        stages[1].className = 'stage-card pending';
-                        stages[2].className = 'stage-card pending';
-                    }, 2500); // Wait for animation to finish
+                        stages[1].className = 'status-tile pending';
+                        stages[2].className = 'status-tile pending';
+                    }, remainingWait); // Wait only if animation hasn't finished
                 } else {
                     throw new Error(data.error || 'Prediction failed');
                 }

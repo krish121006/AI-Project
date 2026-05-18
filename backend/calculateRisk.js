@@ -16,8 +16,8 @@ function calculateRisk(disease, symptoms = []) {
 
     // High Risk Symptoms that immediately trigger 'Danger'
     const highRiskSymptoms = [
-        "chest pain", "breathlessness", "shortness of breath", "high fever",
-        "palpitations", "loss of consciousness"
+        "chest", "breath", "heart", "unconscious", "blood", "bleed", "stroke", "paralysis",
+        "suicide", "faint", "seizure", "choking", "severe", "extreme", "palpitation", "lump"
     ];
 
     const hasHighRiskSymptom = lowerSymptoms.some(s => highRiskSymptoms.some(hrs => s.includes(hrs)));
@@ -26,13 +26,20 @@ function calculateRisk(disease, symptoms = []) {
         return "Danger";
     }
 
-    // High Risk: Requires immediate medical attention
+    // Moderate Risk Symptoms
+    const moderateRiskSymptoms = [
+        "fever", "pain", "vomit", "dizzy", "nausea", "swell", "rash", "vision",
+        "weak", "weight loss", "diarrhea", "infection", "burn", "ache", "cough"
+    ];
+
+    const hasModerateRiskSymptom = lowerSymptoms.some(s => moderateRiskSymptoms.some(mrs => s.includes(mrs)));
+
+    // Disease based risks
     const highRiskDiseases = [
         "malaria", "dengue", "typhoid", "covid-19", "pneumonia",
         "heart disease", "hypertension", "diabetes", "jaundice", "tuberculosis", "heart attack"
     ];
 
-    // Moderate Risk: Should consult a doctor soon
     const moderateRiskDiseases = [
         "flu", "migraine", "arthritis", "bronchial asthma",
         "chicken pox", "hepatitis a", "hepatitis b", "hepatitis c",
@@ -41,10 +48,9 @@ function calculateRisk(disease, symptoms = []) {
 
     if (highRiskDiseases.includes(normalizedDisease)) {
         return "Danger";
-    } else if (moderateRiskDiseases.includes(normalizedDisease)) {
+    } else if (moderateRiskDiseases.includes(normalizedDisease) || hasModerateRiskSymptom) {
         return "Medium";
     } else {
-        // Default to Low for things like Common Cold, Fungal infection, etc.
         return "Low";
     }
 }
